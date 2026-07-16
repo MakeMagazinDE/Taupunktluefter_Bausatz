@@ -112,6 +112,20 @@ void WIFI_Connect()
        delay(1);  // um den Watchdog zurückzusetzen 
        request->send_P(200, "text/html", index_html, processor);
      });
+    server.on("/json", HTTP_GET, [](AsyncWebServerRequest * request) {
+     String json = "{";
+     json += "\"temp_in\":" + String(t1) + ",";
+     json += "\"temp_out\":" + String(t2) + ",";
+     json += "\"humidity_in\":" + String(h1) + ",";
+     json += "\"humidity_out\":" + String(h2) + ",";
+     json += "\"dewpoint_in\":" + String(Taupunkt_1) + ",";
+     json += "\"dewpoint_out\":" + String(Taupunkt_2) + ",";
+     json += "\"dewpoint_delta\":" + String(DeltaTP) + ",";
+     json += "\"fan\":" + String(rel ? "true" : "false");
+     json += "}";
+
+     request->send(200, "application/json", json);
+     });
     server.onNotFound(notFound);
     server.begin();
 
